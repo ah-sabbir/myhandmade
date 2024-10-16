@@ -38,6 +38,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'backend.apps.users',
+    'backend.apps.chat',
+    'backend.apps.reviews',
+    'backend.apps.products',
+    'backend.apps.orders',
+    'backend.apps.notifications',
+    'backend.apps.dashboard',
+    'backend.apps.analytics',
+    'backend.apps.admin_panel',
+    'backend.apps.stores',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -50,7 +61,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'myhandmade.urls'
+ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
     {
@@ -68,7 +79,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'myhandmade.wsgi.application'
+WSGI_APPLICATION = 'backend.wsgi.application'
 
 
 # Database
@@ -99,6 +110,9 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+AUTH_USER_MODEL = 'users.User'  # Assuming your app is named 'users'
+
 
 
 # Internationalization
