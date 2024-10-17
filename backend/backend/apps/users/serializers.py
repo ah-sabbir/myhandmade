@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from rest_framework.authtoken.models import Token
 from django.contrib.auth.password_validation import validate_password
+# from django.contrib.auth.models import User
 # from django.contrib.auth.models import User
 
 User = get_user_model()
@@ -29,5 +31,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return user
 
 class UserLoginSerializer(serializers.Serializer):
-    username = serializers.CharField(required=True)
+    email = serializers.EmailField(required=True)
     password = serializers.CharField(required=True, write_only=True)
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [field.name for field in model._meta.fields if field.name != 'password']

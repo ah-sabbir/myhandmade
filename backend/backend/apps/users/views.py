@@ -2,9 +2,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
-from .serializers import UserRegistrationSerializer, UserLoginSerializer
+from .serializers import UserRegistrationSerializer, UserLoginSerializer, UserSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
+from .models import User
 
 class UserRegisterView(APIView):
     permission_classes = [AllowAny]
@@ -22,13 +23,37 @@ class UserLoginView(APIView):
     def post(self, request):
         serializer = UserLoginSerializer(data=request.data)
         if serializer.is_valid():
-            user = authenticate(username=serializer.data['username'], password=serializer.data['password'])
+            email = serializer.validated_data['email']
+            password = serializer.validated_data['password']
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                return Response({"error":"invalid user"}, status= status.HTTP_401_UNAUTHORIZED)
+            
+            # checking if user authenticated or not
+            user = authenticate(username=user.username, password=password)
+            
             if user is not None:
                 token, _ = Token.objects.get_or_create(user=user)
                 return Response({"token": token.key}, status=status.HTTP_200_OK)
             return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class GetUser(APIView):
+    def get(self, request):
+        users = User.objects.all()  # Get all users
+        serializer = UserSerializer(users, many=True)  # Serialize the queryset
+        return Response(serializer.data, status=status.HTTP_200_OK)  # Return serialized data
+    # queryset = User.objects.all()
+
+    # def get(self, request):
+    #     return Response({"user":User.objects.all()})
+    # serializer_class = UserSerializer
+    # permission_classes = [IsAuthenticated, IsVendor]
+
+    # def perform_create(self, serializer):
+    #     serializer.save(user=self.request.user)
 
 
 # from django.shortcuts import render, redirect

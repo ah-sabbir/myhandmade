@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
@@ -31,10 +32,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('admin', 'Admin'),
     )
 
-    user_id = models.AutoField(primary_key=True)  # Primary key
+    user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)  # Primary key
     username = models.CharField(max_length=150, unique=True)
     email = models.EmailField(unique=True)
-    password_hash = models.CharField(max_length=128)
+    # password_hash = models.CharField(max_length=128)
     role = models.CharField(max_length=6, choices=USER_ROLES, default='buyer')  # Default role
     created_at = models.DateTimeField(auto_now_add=True)  # Timestamp for creation
 
