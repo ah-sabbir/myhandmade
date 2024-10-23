@@ -5,6 +5,8 @@ from django.contrib.auth import authenticate
 from .serializers import UserRegistrationSerializer, UserLoginSerializer, UserSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.urls import reverse
 from .models import User
 
 class UserRegisterView(APIView):
@@ -13,8 +15,13 @@ class UserRegisterView(APIView):
     def post(self, request):
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "User registered successfully", "user": serializer.data}, status=status.HTTP_201_CREATED)
+            user = serializer.save()
+            token = RefreshToken.for_user(user).access_token
+            verification_link = request.build_absolute_uri(
+                reverse('email-verify') + f'?token={str(token)}'
+            )
+            return Response({'message': 'User created. Verify your email.'}, status=status.HTTP_201_CREATED)
+            # return Response({"message": "User registered successfully", "user": serializer.data}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserLoginView(APIView):
@@ -45,6 +52,11 @@ class GetUser(APIView):
         users = User.objects.all()  # Get all users
         serializer = UserSerializer(users, many=True)  # Serialize the queryset
         return Response(serializer.data, status=status.HTTP_200_OK)  # Return serialized data
+
+class VerifyEmail(APIView):
+    
+    def post(self, request):
+        pass
     # queryset = User.objects.all()
 
     # def get(self, request):
