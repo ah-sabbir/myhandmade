@@ -31,7 +31,7 @@ class UserLoginView(APIView):
                 return Response({"error":"invalid user"}, status= status.HTTP_401_UNAUTHORIZED)
             
             # checking if user authenticated or not
-            user = authenticate(username=user.username, password=password)
+            user = authenticate(email=email, password=password)
             
             if user is not None:
                 token, _ = Token.objects.get_or_create(user=user)
