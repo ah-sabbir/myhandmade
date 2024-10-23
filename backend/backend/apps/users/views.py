@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
+from django.core.mail import send_mail
 from django.contrib.auth import authenticate
 from .serializers import UserRegistrationSerializer, UserLoginSerializer, UserSerializer
 from rest_framework.authtoken.models import Token
@@ -16,9 +17,15 @@ class UserRegisterView(APIView):
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-            # token = RefreshToken.for_user(user).access_token
+            token = RefreshToken.for_user(user).access_token
             verification_link = request.build_absolute_uri(
                 reverse('email-verify') + f'?token={str(token)}'
+            )
+            send_mail(
+                'Verify your email',
+                f'Click the link to verify your account: {verification_link}',
+                'from@example.com',
+                [user.email]
             )
             return Response({'message': 'User created. Verify your email.'}, status=status.HTTP_201_CREATED)
             # return Response({"message": "User registered successfully", "user": serializer.data}, status=status.HTTP_201_CREATED)
@@ -57,6 +64,10 @@ class VerifyEmail(APIView):
 
     def post(self, request):
         pass
+    def get(self, request):
+        # token = request.GET.get('token')
+        return Response({"data":"this is email verification code"}, status=status.HTTP_200_OK)
+
     # queryset = User.objects.all()
 
     # def get(self, request):
