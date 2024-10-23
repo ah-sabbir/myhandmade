@@ -30,7 +30,7 @@ class CustomUserManager(BaseUserManager):
         return user
 
 class User(AbstractBaseUser, PermissionsMixin):
-    user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)  # Primary key
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)  # Primary key
     USER_ROLES = (
         ('vendor', 'Vendor'),
         ('customer', 'customer'),
