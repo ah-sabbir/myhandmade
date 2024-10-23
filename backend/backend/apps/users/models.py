@@ -49,7 +49,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     phone_verified = models.BooleanField(default=False)
     # password_hash = models.CharField(max_length=128)
-    role = models.CharField(max_length=6, choices=USER_ROLES, default='customer')  # Default role
+    role = models.CharField(max_length=50, choices=USER_ROLES, default='customer')  # Default role
     created_at = models.DateTimeField(auto_now_add=True)  # Timestamp for creation
 
     objects = CustomUserManager()
