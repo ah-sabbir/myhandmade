@@ -37,7 +37,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
 
     first_name = models.CharField(max_length=150)
-    last_name = models.CharField(max_length=150)
+    last_name = models.CharField(max_length=150, default="")
     email = models.EmailField(unique=True)
     email_verified = models.BooleanField(default=False)
     phone_number = models.CharField(
@@ -55,7 +55,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'  # Use username as the unique identifier
-    # REQUIRED_FIELDS = ['email']  # Email is required, but not the username
+    REQUIRED_FIELDS = ['first_name', 'email', 'phone']  # Email is required, but not the username
 
     def __str__(self):
         return self.user_id
