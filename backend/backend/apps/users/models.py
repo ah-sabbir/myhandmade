@@ -36,8 +36,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('customer', 'customer'),
     )
 
-    first_name = models.CharField(max_length=150)
-    last_name = models.CharField(max_length=150, default="")
+    first_name = models.CharField(max_length=150, default='Unknown')
+    last_name = models.CharField(max_length=150, default='Unknown')
     email = models.EmailField(unique=True)
     email_verified = models.BooleanField(default=False)
     phone_number = models.CharField(
