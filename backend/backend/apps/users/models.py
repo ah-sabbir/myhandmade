@@ -28,7 +28,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     USER_ROLES = (
         ('vendor', 'Vendor'),
-        ('buyer', 'Buyer'),
+        ('customer', 'customer'),
         ('admin', 'Admin'),
     )
 

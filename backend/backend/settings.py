@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'backend.apps.users',
     'backend.apps.chat',
+    'backend.apps.channels',
     'backend.apps.reviews',
     'backend.apps.products',
     'backend.apps.orders',
@@ -49,6 +50,8 @@ INSTALLED_APPS = [
     'backend.apps.admin_panel',
     'backend.apps.stores',
     'rest_framework',
+    'rest_framework_simplejwt',
+    'django_celery_beat',
     'rest_framework.authtoken',
 ]
 
@@ -80,7 +83,17 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'backend.wsgi.application'
+# WSGI_APPLICATION = 'backend.wsgi.application'
+
+ASGI_APPLICATION = 'backend.wsgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 
 # Database
@@ -114,7 +127,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = 'users.User'  # Assuming your app is named 'users'
 
-
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
