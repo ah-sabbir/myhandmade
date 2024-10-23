@@ -16,7 +16,7 @@ class UserRegisterView(APIView):
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-            token = RefreshToken.for_user(user).access_token
+            # token = RefreshToken.for_user(user).access_token
             verification_link = request.build_absolute_uri(
                 reverse('email-verify') + f'?token={str(token)}'
             )
@@ -54,7 +54,7 @@ class GetUser(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)  # Return serialized data
 
 class VerifyEmail(APIView):
-    
+
     def post(self, request):
         pass
     # queryset = User.objects.all()
