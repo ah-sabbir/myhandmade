@@ -54,8 +54,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'username'  # Use username as the unique identifier
+    USER_ID_FIELD = 'user_id'  # Use username as the unique identifier
     REQUIRED_FIELDS = ['email']  # Email is required, but not the username
 
     def __str__(self):
-        return self.username
+        return self.user_id
