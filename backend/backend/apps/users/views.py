@@ -25,7 +25,8 @@ class UserRegisterView(APIView):
                 'Verify your email',
                 f'Click the link to verify your account: {verification_link}',
                 'from@example.com',
-                [user.email]
+                [user.email],
+                fail_silently=False,
             )
             return Response({'message': 'User created. Verify your email.'}, status=status.HTTP_201_CREATED)
             # return Response({"message": "User registered successfully", "user": serializer.data}, status=status.HTTP_201_CREATED)
