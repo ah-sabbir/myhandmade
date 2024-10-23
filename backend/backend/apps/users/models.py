@@ -52,7 +52,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     role = models.CharField(max_length=6, choices=USER_ROLES, default='customer')  # Default role
     created_at = models.DateTimeField(auto_now_add=True)  # Timestamp for creation
 
-    objects = UserManager()
+    objects = CustomUserManager()
 
     USERNAME_FIELD = 'username'  # Use username as the unique identifier
     REQUIRED_FIELDS = ['email']  # Email is required, but not the username
