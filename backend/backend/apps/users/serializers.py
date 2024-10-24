@@ -1,7 +1,7 @@
-from rest_framework import serializers
-from django.contrib.auth import get_user_model
-from rest_framework.authtoken.models import Token
-from django.contrib.auth.password_validation import validate_password
+from rest_framework import serializers # type: ignore
+from django.contrib.auth import get_user_model # type: ignore
+from rest_framework.authtoken.models import Token # type: ignore
+from django.contrib.auth.password_validation import validate_password # type: ignore
 # from django.contrib.auth.models import User
 # from django.contrib.auth.models import User
 
@@ -32,9 +32,14 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-class UserLoginSerializer(serializers.Serializer):
+class UserLoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
-    password = serializers.CharField(required=True, write_only=True)
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = '__all__'
+
 
 
 class UserSerializer(serializers.ModelSerializer):

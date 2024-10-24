@@ -1,21 +1,21 @@
 import uuid
-from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from django.core.validators import RegexValidator
+from django.db import models # type: ignore
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin # type: ignore
+from django.core.validators import RegexValidator # type: ignore
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, first_name, last_name, email, phone = None, password = None):
+    def create_user(self, first_name, last_name, email, phone_number = None, password = None):
         if not email:
             raise ValueError("Users must have an email address")
-        if not username:
-            raise ValueError("Users must have a username")
+        if not first_name: # type: ignore
+            raise ValueError("Users must have a first_name")
 
         user = self.model(
             first_name = self.first_name,
             last_name = self.last_name,
             email=self.normalize_email(email),
-            phone = self.phone
-            **extra_fields
+            phone_number = self.phone_number
+            **extra_fields # type: ignore
         )
         user.set_password(password)  # Hash the password
         user.save(using=self._db)
@@ -58,4 +58,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['first_name', 'phone']  # Email is required, but not the username
 
     def __str__(self):
-        return self.user_id
+        # Get all fields except 'password'
+        user_data = {k: v for k, v in self.__dict__.items() if k != 'password' and not k.startswith('_')}
+        return str(user_data)
