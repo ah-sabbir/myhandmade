@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import cloudinary_storage
 import os
 
 from dotenv import load_dotenv # type: ignore
@@ -57,6 +58,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'django_celery_beat',
     'rest_framework.authtoken',
+    'cloudinary_storage',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -164,6 +167,30 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_ID') 
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PW')
+
+
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUD_NAME'),
+    'API_KEY': os.environ.get('API_KEY'),
+    'API_SECRET': os.environ.get('API_SECRET'),
+}
+
+# make cloudinary default file storage 
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# import cloudinary
+# import cloudinary.uploader
+# import cloudinary.api
+
+# # Cloudinary Configuration
+# cloudinary.config(
+#     cloud_name= os.environ.get('your_cloud_name'),  # replace with your cloud name
+#     api_key= os.environ.get('your_api_key'),         # replace with your API key
+#     api_secret= os.environ.get('your_api_secret')    # replace with your API secret
+# )
+
 
 
 
