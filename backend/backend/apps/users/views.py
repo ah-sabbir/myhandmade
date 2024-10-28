@@ -23,6 +23,7 @@ class UserRegisterView(APIView):
             verification_link = request.build_absolute_uri(
                 reverse('email-verify') + f'?token={str(token)}'
             )
+            print(verification_link)
             # send_mail(
             #     'Verify your email',
             #     f'Click the link to verify your account: {verification_link}',
