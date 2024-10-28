@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.core.validators import RegexValidator # type: ignore
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, first_name, last_name, email, password = None, **extra_fields):
+    def create_user(self, first_name, last_name, email, password = None, phone_number = None, **extra_fields):
         if not email:
             raise ValueError("Users must have an email address")
         if not first_name: # type: ignore
@@ -14,6 +14,7 @@ class CustomUserManager(BaseUserManager):
             first_name = first_name,
             last_name = last_name,
             email=self.normalize_email(email),
+            phone_number= phone_number,
             **extra_fields # type: ignore
         )
         user.set_password(password)  # Hash the password
