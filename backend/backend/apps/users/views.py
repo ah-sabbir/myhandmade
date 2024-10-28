@@ -31,7 +31,7 @@ class UserRegisterView(APIView):
             #     [user.email],
             #     fail_silently=False,
             # )
-            return Response({'message': 'User created. Verify your email.','url':verification_link}, status=status.HTTP_201_CREATED)
+            return Response({'email':user.email, 'message': 'User created. Verify your email.','url':verification_link}, status=status.HTTP_201_CREATED)
             # return Response({"message": "User registered successfully", "user": serializer.data}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
