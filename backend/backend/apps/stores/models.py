@@ -11,32 +11,26 @@ class Category(models.Model):
         return self.name
 
 
-class Vendor(models.Model):
+def save_dir(instance, filename):
+    print(instance.id)
+    print(filename)
+    return f'./product/{instance.id}-{filename}'
+
+
+class Store(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)  # Primary key
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    store_name = models.CharField(max_length=255, unique=True)
+    owner = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name=("owner"), on_delete=models.CASCADE, related_name='products')
+    store_name = models.CharField(max_length=50)
     store_description = models.TextField(blank=True)
     logo = models.ImageField(upload_to='static/images/logo_images/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    is_enable = models.BooleanField(default=True)
+    phone_number = models.BigIntegerField(unique=True)
+    address = models.TextField(blank=True)
+
+    products = models.ManyToManyField('Product', related_name='stores')
+
     def __str__(self):
         return self.store_name
-
-
-class Product(models.Model):
-    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='product_images/', blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.name
-    
-class ProductVariant(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    variant_name = models.CharField(max_length=50)
-    additional_price = models.DecimalField(max_digits=10, decimal_places=2)
 
