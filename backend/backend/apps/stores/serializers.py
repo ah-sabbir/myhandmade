@@ -5,12 +5,8 @@ from .models import Store
 
 
 class StoreSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.id')
     class Meta:
         model = Store
         fields = '__all__'
 
-
-# class ProductSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Product
-#         fields = '__all__'

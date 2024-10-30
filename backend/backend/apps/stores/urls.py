@@ -5,12 +5,15 @@ from .views import (
     # CategoryListCreateView,
     MyStoresDetailView,
     MyStoreDetailView,
+    StoreCreateView,
+    StoreView,
     # ProductListCreateView,
 )
 
 urlpatterns = [
-    # path('categories/', CategoryListCreateView.as_view(), name='category-list-create'),
-    path('mystores', MyStoresDetailView.as_view(), name='mystores-detail'),
+    path('store', StoreView.as_view(), name='store-view'),
     path('mystore/', MyStoreDetailView.as_view(), name='mystore-detail'),
+    path('mystores', MyStoresDetailView.as_view(), name='mystores-detail'),
+    path('create-store/', StoreCreateView.as_view(), name='create-store'),
     # path('products/', ProductListCreateView.as_view(), name='product-list-create'),
 ]

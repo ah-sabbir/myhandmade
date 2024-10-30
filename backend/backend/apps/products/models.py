@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import JSONField
-
+from django.conf import settings # type: ignore
 from backend.apps.stores.models import Store
 
 
@@ -40,6 +40,7 @@ class Product(models.Model):
     categories = models.ManyToManyField(Category, related_name="products")
 
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    owner = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name=("owner"), on_delete=models.CASCADE, related_name='products')
 
     def __str__(self):
         return self.name

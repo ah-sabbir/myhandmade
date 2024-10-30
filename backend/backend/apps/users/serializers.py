@@ -49,4 +49,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = [field.name for field in model._meta.fields if field.name != 'password']
+        fields = '__all__'  # Use all fields in the model
+        extra_kwargs = {
+            'password': {'write_only': True}  # Exclude 'password' from being exposed in the output
+        }
