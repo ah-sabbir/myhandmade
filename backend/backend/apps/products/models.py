@@ -1,10 +1,26 @@
 from django.db import models
-from backend.apps.stores.models import Category
+from django.db.models import JSONField
+
+from backend.apps.stores.models import Store
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+
 
 class DocumentManager(models.Manager):
     def is_enable(self):
         return self.filter(is_enable=True)
         # super().queryset().filter()
+
+
+def save_dir(instance, filename):
+    print(instance.id)
+    print(filename)
+    return f'./static/images/product/{instance.id}-{filename}'
 
 
 class Product(models.Model):
@@ -21,27 +37,15 @@ class Product(models.Model):
     is_enable = models.BooleanField(default=True)
     objects = DocumentManager()
     properties = JSONField(default=dict)
-    categurise = models.ManyToManyField(Category, related_name="products")
+    categories = models.ManyToManyField(Category, related_name="products")
+
+    store = models.ForeignKey(Store, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
-        old_image = ''
-        if self.image:
-            old_image = self.image
-            self.image = ''
-            super().save(*args, **kwargs)
-        self.image = old_image
-        super().save(*args, **kwargs)
-
-    def clean(self):
-        super().clean()
-        if not "Mapsa" in self.name:
-            raise ValidationError("Must include Mapsa")
-
-    def get_absolute_url(self):
-        return reverse('product-detail', kwargs={'pk': self.pk})
+    # def get_absolute_url(self):
+    #     return reverse('product-detail', kwargs={'pk': self.pk})
 
     def rating(self):
         if self._rating is None:
@@ -61,18 +65,19 @@ class Product(models.Model):
 
 
 
-class Product(models.Model):
-    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='product_images/', blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+# class Product(models.Model):
+#     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
+#     name = models.CharField(max_length=255)
+#     description = models.TextField()
+#     price = models.DecimalField(max_digits=10, decimal_places=2)
+#     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+#     image = models.ImageField(upload_to='product_images/', blank=True, null=True)
+#     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.name
-    
+#     def __str__(self):
+#         return self.name
+
+
 class ProductVariant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     variant_name = models.CharField(max_length=50)

@@ -1,21 +1,16 @@
 # backend/apps/store/serializers.py
 
 from rest_framework import serializers # type: ignore
-from .models import Category, Vendor, Product
+from .models import Store
 
-class CategorySerializer(serializers.ModelSerializer):
+
+class StoreSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Category
+        model = Store
         fields = '__all__'
 
 
-class VendorSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Vendor
-        fields = '__all__'
-
-
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = '__all__'
+# class ProductSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Product
+#         fields = '__all__'

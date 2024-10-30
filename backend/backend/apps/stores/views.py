@@ -3,35 +3,30 @@ from rest_framework.response import Response # type: ignore
 from rest_framework import status # type: ignore
 
 from rest_framework import generics # type: ignore
-from .models import Category, Vendor, Product
-from .serializers import CategorySerializer, VendorSerializer, ProductSerializer
+from .models import Category, Store
+from .serializers import StoreSerializer
 from rest_framework.permissions import IsAuthenticated # type: ignore
 
 import uuid
 
-class CategoryListCreateView(generics.ListCreateAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    permission_classes = [IsAuthenticated]
-
 
 # for multiple store view
 class MyStoresDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Vendor.objects.all()
-    serializer_class = VendorSerializer
+    queryset = Store.objects.all()
+    serializer_class = StoreSerializer
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         user = request.user
         # user_id = User.objects.get(email=user)
-        vendor = Vendor.objects.filter(user=user.id)
-        mystore = VendorSerializer(vendor, many=True)
+        store = Store.objects.filter(user=user.id)
+        mystore = StoreSerializer(store, many=True)
         return Response({'mystore':mystore.data}, status=status.HTTP_200_OK)
 
 # for single store view
 class MyStoreDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Vendor.objects.all()
-    serializer_class = VendorSerializer
+    queryset = Store.objects.all()
+    serializer_class = StoreSerializer
     permission_classes = [IsAuthenticated]
 
     def is_valid_uuid(self, uuid_string):
@@ -47,19 +42,19 @@ class MyStoreDetailView(generics.RetrieveUpdateDestroyAPIView):
             if store_id and self.is_valid_uuid(store_id):
                 user = request.user
                 # user_id = User.objects.get(email=user)
-                vendor = Vendor.objects.filter(user=user.id, id=store_id)
-                mystore = VendorSerializer(vendor, many=True)
+                store = Store.objects.filter(user=user.id, id=store_id)
+                mystore = StoreSerializer(store, many=True)
                 return Response({'mystore':mystore.data}, status=status.HTTP_200_OK)
             
             return Response({'error':'store_id is required or value error'}, status=status.HTTP_400_BAD_REQUEST)
-        except Vendor.DoesNotExist:
+        except Store.DoesNotExist:
             return Response({'error':'Something went wrong or there is no store created'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ProductListCreateView(generics.ListCreateAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-    permission_classes = [IsAuthenticated]
+# class ProductListCreateView(generics.ListCreateAPIView):
+#     queryset = Product.objects.all()
+#     serializer_class = ProductSerializer
+#     permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
-        serializer.save(vendor=self.request.user.vendor)  # Assumes user has a related vendor
+#     def perform_create(self, serializer):
+#         serializer.save(vendor=self.request.user.vendor)  # Assumes user has a related vendor
