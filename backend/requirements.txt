@@ -25,3 +25,6 @@ tzdata==2024.2
 vine==5.1.0
 wcwidth==0.2.13
 django-cloudinary-storage
+psycopg2
+resend
+supabase
