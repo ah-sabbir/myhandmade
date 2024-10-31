@@ -25,4 +25,4 @@ jobs:
           
       - name: Run Tests
         run: |
-          python backend/manage.py test users
+          python backend/manage.py test apps/users
