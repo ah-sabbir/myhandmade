@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'backend.apps.analytics',
     'backend.apps.admin_panel',
     'backend.apps.stores',
+    'backend.apps.categories',
     'rest_framework',
     'rest_framework_simplejwt',
     'django_celery_beat',
@@ -101,6 +102,8 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+
 
 
 # Database
@@ -172,20 +175,20 @@ REST_FRAMEWORK = {
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Email credentials
-# EMAIL_HOST = 'smtp.office365.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = os.environ.get('EMAIL_ID') 
-# EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PW')
-
-EMAIL_HOST = 'smtp.resend.com'
-EMAIL_PORT = 465
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'resend' 
-EMAIL_HOST_PASSWORD = 'Myhandmade#pass' #'re_epeYK9t8_MyLFnaiAJZdSJbSBJfxVDW6v'
+EMAIL_HOST_USER = 'koodi.cloud@gmail.com'
+EMAIL_HOST_PASSWORD = 'gvje nsms jjdw lfnb'
 
-SUPABASE_URL = 'https://cwclpnpkglzoscohzvnx.supabase.co'
-SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN3Y2xwbnBrZ2x6b3Njb2h6dm54Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzAzNjc3NjcsImV4cCI6MjA0NTk0Mzc2N30.6SY6KC0cGnTs1QRNqDhuPCyHzcodSkjpp1swTclo8xk'
+# EMAIL_HOST = 'smtp.resend.com'
+# EMAIL_PORT = 465
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'resend' 
+# EMAIL_HOST_PASSWORD = 'Myhandmade#pass' #'re_epeYK9t8_MyLFnaiAJZdSJbSBJfxVDW6v'
+
+# SUPABASE_URL = 'https://cwclpnpkglzoscohzvnx.supabase.co'
+# SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN3Y2xwbnBrZ2x6b3Njb2h6dm54Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzAzNjc3NjcsImV4cCI6MjA0NTk0Mzc2N30.6SY6KC0cGnTs1QRNqDhuPCyHzcodSkjpp1swTclo8xk'
 
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.environ.get('CLOUD_NAME'),

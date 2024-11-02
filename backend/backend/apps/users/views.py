@@ -10,9 +10,11 @@ from rest_framework_simplejwt.tokens import RefreshToken # type: ignore
 from django.urls import reverse # type: ignore
 from .models import User
 import json
-import resend
+import jwt
 
-from supabase import create_client
+from django.core.mail import EmailMessage
+import socket
+
 from django.conf import settings
 
 
@@ -26,16 +28,22 @@ class UserRegisterView(APIView):
             user = serializer.save()
             token = RefreshToken.for_user(user).access_token
             verification_link = request.build_absolute_uri(
-                reverse('email-verify') + f'?token={str(token)}'+f'?email={str(user.email)}'
+                reverse('email-verify') + f'?token={str(token)}'
             )
-            print(verification_link)
-            # send_mail(
-            #     'Verify your email',
-            #     f'Click the link to verify your account: {verification_link}',
-            #     'onboarding@resend.dev',
-            #     [user.email],
-            #     fail_silently=False,
-            # )
+            # print(verification_link)
+            email = EmailMessage(
+                'Verify Your Email',
+                f'Click the link to verify your account: {verification_link}',
+                settings.EMAIL_HOST_USER,
+                [user.email]
+            )
+            email.fail_silently = False
+            try:
+                email.send()
+            except socket.gaierror as e:
+                print(e)
+            except Exception as e:
+                pass
             return Response({'email':user.email, 'message': 'User created. Verify your email.', 'url':verification_link}, status=status.HTTP_201_CREATED) #,
             # return Response({"message": "User registered successfully", "user": serializer.data}, status=status.HTTP_201_CREATED)
         print(serializer.errors)
@@ -79,20 +87,17 @@ class VerifyEmail(APIView):
     permission_classes = [AllowAny]
     def get(self, request):
         token = request.GET.get('token')  # Get the token from the URL
-        email = request.GET.get('email')  # Get the email from the URL
+        # email = request.GET.get('email')  # Get the email from the URL
 
-        # Initialize Supabase client
-        supabase_url = settings.SUPABASE_URL  # Set this in your Django settings
-        supabase_key = settings.SUPABASE_KEY  # Set this in your Django settings
-        supabase = create_client(supabase_url, supabase_key)
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+            user = User.objects.get(id=payload['user_id'])
+            user.email_verified = True
+            user.save()
+        except Exception as e:
+            print(e)
+            return Response({'status':'fail', 'message': 'something went wrong'}, status=status.HTTP_303_SEE_OTHER)
 
-        # Verify the email using the Supabase client
-        # response = supabase.auth.verify_email(token, email)
-        response = supabase.auth.sign_in_with_email(email)
-        print(response)
-        if response.get('error'):
-            return JsonResponse({'status': 'error', 'message': response['error']['message']})
-
-        return JsonResponse({'status': 'success', 'message': 'Email verified successfully!'})
+        return Response({'status': 'success', 'message': 'Email verified successfully!'}, status=status.HTTP_200_OK)
 
  

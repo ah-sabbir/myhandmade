@@ -14,6 +14,6 @@ urlpatterns = [
     path('store', StoreView.as_view(), name='store-view'),
     path('mystore/', MyStoreDetailView.as_view(), name='mystore-detail'),
     path('mystores', MyStoresDetailView.as_view(), name='mystores-detail'),
-    path('create-store/', StoreCreateView.as_view(), name='create-store'),
+    path('create-store', StoreCreateView.as_view(), name='create-store'),
     # path('products/', ProductListCreateView.as_view(), name='product-list-create'),
 ]
