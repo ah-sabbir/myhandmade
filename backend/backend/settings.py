@@ -124,7 +124,10 @@ DATABASES = {
         'USER': 'postgres.cwclpnpkglzoscohzvnx',        # Supabase user
         'PASSWORD': 'Myhandmade#pass', # Supabase password
         'HOST': 'aws-0-ap-southeast-1.pooler.supabase.com',         # Supabase host, e.g., db.supabase.co
-        'PORT': '6543',                       # Default PostgreSQL port
+        'PORT': '6543',   
+        'TEST': {
+            'NAME': 'unique_test_database_name',  # Unique name to avoid conflicts
+        },                    # Default PostgreSQL port
     }
 }
 
