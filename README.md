@@ -41,6 +41,45 @@ Welcome to the MyHandmade project! This is a full-stack web application for loca
 - **Payments**: Stripe/PayPal API integration
 - **Deployment**: AWS/GCP/DigitalOcean
 
+
+
+## API Documentation
+
+### API End Points:
+   - `api/v1/users/`
+   - `api/v1/stores/`
+   - `api/v1/products/`
+   - `api/v1/categories/ ^category/$ [name='category-list']`
+   - `api/v1/categories/ ^category\.(?P<format>[a-z0-9]+)/?$ [name='category-list']`
+   - `api/v1/categories/ ^category/(?P<pk>[^/.]+)/$ [name='category-detail']`
+   - `api/v1/categories/ ^category/(?P<pk>[^/.]+)\.(?P<format>[a-z0-9]+)/?$ [name='category-detail']`
+   - `api/v1/categories/ ^category/(?P<pk>[^/.]+)/products/$ [name='category-get-products']`
+   - `api/v1/categories/ ^category/(?P<pk>[^/.]+)/products\.(?P<format>[a-z0-9]+)/?$ [name='category-get-products']`
+   - `api/v1/categories/ [name='api-root']`
+   - `api/v1/categories/ <drf_format_suffix:format> [name='api-root']`
+   - `api/v1/categories/ categories/ [name='category-list-create']`
+   - `api/v1/categories/ category [name='categories-detail']`
+
+<!-- <pre>
+<code>
+   -
+   </code>
+</pre> -->
+
+<!-- # API Documentation -->
+
+<!-- ## User API
+
+### 1. Get User Information
+- **HTTP Method**: `GET`
+- **URL**: `/api/users/{id}`
+- **Parameters**:
+  - `id` (required): The ID of the user to retrieve.
+  
+#### Example Request
+```bash
+curl -X GET "https://api.example.com/api/users/123" -->
+
 ## Getting Started
 
 ### Prerequisites
