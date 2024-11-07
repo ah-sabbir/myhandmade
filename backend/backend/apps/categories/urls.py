@@ -12,7 +12,7 @@ from .views import CategoryViewSet, CategoryListCreateView, CategoryDetailView#,
 
 
 urlpatterns = [
-    path('', CategoryViewSet, name='get-products-by-category'),
+    path('', CategoryViewSet.as_view(), name='get-products-by-category'),
     path('categories/', CategoryListCreateView.as_view(), name='category-list-create'),
     path('category', CategoryDetailView.as_view(), name='categories-detail'),
 ]
