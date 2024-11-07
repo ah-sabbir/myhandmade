@@ -1,0 +1,156 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2023-10-06T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.4.1",
+  "resources": [
+    {
+      "_id": "wrk_1",
+      "created": 1630307529744,
+      "description": "",
+      "modified": 1630307529744,
+      "name": "API Project",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_1",
+      "parentId": "wrk_1",
+      "modified": 1630307529744,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:8000/api/v1",
+        "format": "json",
+        "pk": "1"
+      },
+      "_type": "environment"
+    },
+    {
+      "_id": "fld_users",
+      "parentId": "wrk_1",
+      "name": "Users",
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_users_list",
+      "parentId": "fld_users",
+      "name": "List Users",
+      "method": "GET",
+      "url": "{{ base_url }}/users/",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_stores",
+      "parentId": "wrk_1",
+      "name": "Stores",
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_stores_list",
+      "parentId": "fld_stores",
+      "name": "List Stores",
+      "method": "GET",
+      "url": "{{ base_url }}/stores/",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_products",
+      "parentId": "wrk_1",
+      "name": "Products",
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_products_list",
+      "parentId": "fld_products",
+      "name": "List Products",
+      "method": "GET",
+      "url": "{{ base_url }}/products/",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_categories",
+      "parentId": "wrk_1",
+      "name": "Categories",
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_categories_list",
+      "parentId": "fld_categories",
+      "name": "List Categories",
+      "method": "GET",
+      "url": "{{ base_url }}/categories/category/",
+      "_type": "request"
+    },
+    {
+      "_id": "req_categories_list_format",
+      "parentId": "fld_categories",
+      "name": "List Categories with Format",
+      "method": "GET",
+      "url": "{{ base_url }}/categories/category.{{ format }}/",
+      "_type": "request"
+    },
+    {
+      "_id": "req_categories_detail",
+      "parentId": "fld_categories",
+      "name": "Category Detail",
+      "method": "GET",
+      "url": "{{ base_url }}/categories/category/{{ pk }}/",
+      "_type": "request"
+    },
+    {
+      "_id": "req_categories_detail_format",
+      "parentId": "fld_categories",
+      "name": "Category Detail with Format",
+      "method": "GET",
+      "url": "{{ base_url }}/categories/category/{{ pk }}.{{ format }}/",
+      "_type": "request"
+    },
+    {
+      "_id": "req_category_products",
+      "parentId": "fld_categories",
+      "name": "Category Products",
+      "method": "GET",
+      "url": "{{ base_url }}/categories/category/{{ pk }}/products/",
+      "_type": "request"
+    },
+    {
+      "_id": "req_category_products_format",
+      "parentId": "fld_categories",
+      "name": "Category Products with Format",
+      "method": "GET",
+      "url": "{{ base_url }}/categories/category/{{ pk }}/products.{{ format }}/",
+      "_type": "request"
+    },
+    {
+      "_id": "req_api_root",
+      "parentId": "fld_categories",
+      "name": "API Root",
+      "method": "GET",
+      "url": "{{ base_url }}/categories/",
+      "_type": "request"
+    },
+    {
+      "_id": "req_api_root_format",
+      "parentId": "fld_categories",
+      "name": "API Root with Format",
+      "method": "GET",
+      "url": "{{ base_url }}/categories.{{ format }}",
+      "_type": "request"
+    },
+    {
+      "_id": "req_category_list_create",
+      "parentId": "fld_categories",
+      "name": "List/Create Categories",
+      "method": "POST",
+      "url": "{{ base_url }}/categories/categories/",
+      "_type": "request"
+    },
+    {
+      "_id": "req_category_detail_alias",
+      "parentId": "fld_categories",
+      "name": "Category Detail Alias",
+      "method": "GET",
+      "url": "{{ base_url }}/categories/category",
+      "_type": "request"
+    }
+  ]
+}
