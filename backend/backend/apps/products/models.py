@@ -2,11 +2,11 @@ from django.db import models
 from django.db.models import JSONField
 from django.conf import settings # type: ignore
 from backend.apps.stores.models import Store
+from backend.apps.categories.models import Category
 
 from django.db import models
 from django.conf import settings
 from django.db.models import JSONField, Sum, Count
-from backend.apps.stores.models import Store
 
 
 
