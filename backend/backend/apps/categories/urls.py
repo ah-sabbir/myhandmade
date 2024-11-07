@@ -7,6 +7,6 @@ router.register(r'category', CategoryViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('categories/', CategoryListCreateView.as_view(), name='category-list-create'),
-    path('category', CategoryDetailView.as_view(), name='categories-detail'),
+    # path('category/', CategoryListCreateView.as_view(), name='category-list-create'),
+    # path('', CategoryDetailView.as_view(), name='categories-detail'),
 ]
