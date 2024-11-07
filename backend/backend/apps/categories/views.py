@@ -21,10 +21,11 @@ class CategoryDetailView(APIView):
         serializer = CategorySerializer(queryset, many=True)
         return Response({'categories':serializer.data})
 
-class CategoryViewSet(viewsets.ModelViewSet):
+class CategoryViewSet(viewsets.ReadOnlyModelViewSet):  # Use ReadOnlyModelViewSet for GET-only functionality
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
+    @action(detail=True, methods=['get'], url_path='products')  # Custom action to get products by category
     def get_products(self, request, pk=None):
         category = self.get_object()
         products = Product.objects.filter(categories=category)
