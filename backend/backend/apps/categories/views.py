@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from .models import Category
 from .serializers import CategorySerializer
 from backend.apps.products.models import Product  # Adjust the import based on your project structure
