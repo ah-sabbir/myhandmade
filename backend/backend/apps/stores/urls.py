@@ -19,7 +19,7 @@ router.register(r'store', StoreViewSet, basename='store')
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('', StoreView.as_view(), name='store-view'),
+    path('all', StoreView.as_view(), name='stores-view'),
     path('mystore/', MyStoreDetailView.as_view(), name='mystore-detail'),
     path('mystores', MyStoresDetailView.as_view(), name='mystores-detail'),
     path('create-store', StoreCreateView.as_view(), name='create-store'),

@@ -75,10 +75,10 @@ class StoreCreateView(APIView):
 
 class StoreView(APIView):
     permission_classes = [AllowAny]
-
+    
     def get(self, request):
-        store = Store.objects.all()
-        serializer = StoreSerializer(store, many=True)
+        stores_with_products = Store.objects.prefetch_related('product_store').all()
+        serializer = StoreSerializer(stores_with_products, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -86,10 +86,18 @@ class StoreViewSet(viewsets.ModelViewSet):
     queryset = Store.objects.all()
     serializer_class = StoreSerializer
 
-    def get(self, request, *args, **kwargs):
-        return Response({"message":"this is get method"}, status = status.HTTP_200_OK)
+    # def list(self, request, *args, **kwargs):
+    #     return Response({"message":"this is get method"}, status = status.HTTP_200_OK)
+
+    # def retrieve(self, request, *args, **kwargs):
+    #     return super().retrieve(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
+        try:
+            if Store.objects.filter(owner=request.user).exists():
+                return Response({"message":"You Can't Create Store More Than One"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            print(e)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(owner=self.request.user)
@@ -109,25 +117,3 @@ class StoreViewSet(viewsets.ModelViewSet):
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
-# class StoreCreateView(APIView):
-#     # permission_classes = [IsAuthenticated]  # Only authenticated users can create a store
-#     permission_classes = [AllowAny]
-
-#     def post(self, request):
-#         serializer = StoreSerializer(data=request.data)
-#         user = User.objects.filter(id="d9b9962e-50e1-428a-b68a-198124ee9ddb")
-#         # userSerializer = UserSerializer(user, many=True)
-#         if serializer.is_valid():
-#             serializer.save(owner=user)  # Set the owner to the authenticated user
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-# class ProductListCreateView(generics.ListCreateAPIView):
-#     queryset = Product.objects.all()
-#     serializer_class = ProductSerializer
-#     permission_classes = [IsAuthenticated]
-
-#     def perform_create(self, serializer):
-#         serializer.save(vendor=self.request.user.vendor)  # Assumes user has a related vendor

@@ -8,6 +8,7 @@ from .serializers import ProductSerializer, CategorySerializer
 from rest_framework.views import APIView # type: ignore
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework import viewsets
 
 class CategoryListCreateView(generics.ListCreateAPIView):
     queryset = Category.objects.all()
@@ -29,6 +30,27 @@ class ProductDetailView(APIView):
         product = Store.objects.all()
         productserializer = ProductSerializer(product, many=True)
         return Response({'products':productserializer.data}, status=status.HTTP_200_OK)
+
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(owner=self.request.user)
+        self.perform_create(serializer)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        pass
+
+        return Response(status = status.HTTP_200_OK)
+    
+    def list(self, request):
+        print('this is a list')
+
+        return Response({'ok':200})
+
+
 
 
 # class ProductDetailView(generics.ListCreateAPIView):

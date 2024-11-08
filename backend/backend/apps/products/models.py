@@ -38,10 +38,10 @@ class Product(models.Model):
     stock = models.PositiveIntegerField()
     sku = models.CharField(max_length=100, unique=True)  # Stock Keeping Unit
     properties = JSONField(default=dict)  # Custom attributes
-    categories = models.ManyToManyField(Category, related_name='products')
+    categories = models.ManyToManyField(Category, related_name='product_category')
     brand = models.ForeignKey(Brand, on_delete=models.SET_NULL, null=True, blank=True)
-    store = models.ForeignKey(Store, on_delete=models.CASCADE)
-    owner = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name=("owner"), on_delete=models.CASCADE, related_name='products')
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='product_store')
+    owner = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name=("owner"), on_delete=models.CASCADE, related_name='product_owner')
 
     objects = DocumentManager()
 
