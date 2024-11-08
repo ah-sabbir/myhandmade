@@ -13,7 +13,7 @@ def save_dir(instance, filename):
 
 
 class Store(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)  # Primary key
+    id  =    models.AutoField(primary_key=True, editable=False)  # Primary key
     owner = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name=("owner"), on_delete=models.CASCADE, related_name='stores')
     store_name = models.CharField(max_length=50)
     slug = models.CharField(max_length=50, null=False, unique=True)
