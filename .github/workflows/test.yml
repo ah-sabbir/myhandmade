@@ -28,3 +28,7 @@ jobs:
       - name: Run Tests
         run: |
           python backend/manage.py test backend.apps.users.tests --keepdb
+
+      # - name: Run Store Tests
+      #   run: |
+      #     python backend/manage.py test backend.apps.users.tests --keepdb
