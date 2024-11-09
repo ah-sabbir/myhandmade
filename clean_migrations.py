@@ -16,6 +16,9 @@ def delete_migration_files(project_root):
                     shutil.rmtree(root)
                     print(f"Directory '{root}' has been deleted.")
             # print(root)
+        if root.endswith("__pycache__"):
+            shutil.rmtree(root)
+            print(f"Directory '{root}' has been deleted.")
     print("No Tree Has Detected!")
 
 if __name__ == "__main__":
