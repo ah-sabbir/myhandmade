@@ -23,5 +23,5 @@ def delete_migration_files(project_root):
 
 if __name__ == "__main__":
     # Replace 'your_project_root_directory' with the root path of your Django project
-    project_root = "backend/backend/apps"
+    project_root = "backend/apps"
     delete_migration_files(project_root)

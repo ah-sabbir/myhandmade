@@ -15,9 +15,6 @@ from .tasks import send_verification_email
 import json
 import jwt
 
-from django.core.mail import EmailMessage
-import socket
-
 from django.conf import settings
 
 
@@ -29,12 +26,13 @@ class UserRegisterView(APIView):
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-            # token = RefreshToken.for_user(user).access_token
-            # verification_link = request.build_absolute_uri(
-            #             reverse('email-verify') + f'?token={str(token)}'
-            #         )
-            send_verification_email.delay(user.id)
-            return Response({'email':user.email, 'message': 'An verification mail has been sent. Verify your email.'}, status=status.HTTP_201_CREATED) #,
+            token = RefreshToken.for_user(user).access_token
+            verification_link = request.build_absolute_uri(
+                        reverse('email-verify') + f'?token={str(token)}'
+                    )
+            result = send_verification_email.delay(user.email, verification_link)
+            print(result.get(timeout=10))
+            return Response({'message': 'An verification mail has been sent. Verify your email.'}, status=status.HTTP_201_CREATED) #,
             # return Response({"message": "User registered successfully", "user": serializer.data}, status=status.HTTP_201_CREATED)
         # print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

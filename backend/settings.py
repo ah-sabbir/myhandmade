@@ -98,17 +98,19 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('127.0.0.1', 6379)],
+            'hosts': [('redis-16174.c281.us-east-1-2.ec2.redns.redis-cloud.com', 16174)],
         },
     },
 }
 
+# redis://default:
 
+# redis-cli -u redis://default:@memcached-15340.c9.us-east-1-2.ec2.redns.redis-cloud.com:15340
 
-CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'  # Use your broker
+CELERY_BROKER_URL = 'redis://default:YnrV9rNvfPk0PdfDyFzwRIIlJun4r45V@redis-16174.c281.us-east-1-2.ec2.redns.redis-cloud.com'  # Use your broker
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_BACKEND = 'rpc://localhost:5672/0'
+CELERY_RESULT_BACKEND = 'redis://default:YnrV9rNvfPk0PdfDyFzwRIIlJun4r45V@redis-16174.c281.us-east-1-2.ec2.redns.redis-cloud.com'
 CELERY_TIMEZONE = 'UTC'
 CELERY_ENABLE_UTC = True
 
