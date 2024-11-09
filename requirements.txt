@@ -28,3 +28,4 @@ django-cloudinary-storage
 psycopg2
 resend
 supabase
+celery
