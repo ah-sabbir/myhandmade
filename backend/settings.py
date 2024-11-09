@@ -98,19 +98,19 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('redis-16174.c281.us-east-1-2.ec2.redns.redis-cloud.com', 16174)],
+            'hosts': [('localhost', 6379)],
         },
     },
 }
 
 # redis://default:
 
-# redis-cli -u redis://default:@memcached-15340.c9.us-east-1-2.ec2.redns.redis-cloud.com:15340
+# edis://:YnrV9rNvfPk0PdfDyFzwRIIlJun4r45V@redis-16174.c281.us-east-1-2.ec2.redns.redis-cloud.com:16174/0
 
-CELERY_BROKER_URL = 'redis://default:YnrV9rNvfPk0PdfDyFzwRIIlJun4r45V@redis-16174.c281.us-east-1-2.ec2.redns.redis-cloud.com'  # Use your broker
+CELERY_BROKER_URL = 'redis://:YnrV9rNvfPk0PdfDyFzwRIIlJun4r45V@redis-16174.c281.us-east-1-2.ec2.redns.redis-cloud.com:16174/0'  # Use your broker
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_BACKEND = 'redis://default:YnrV9rNvfPk0PdfDyFzwRIIlJun4r45V@redis-16174.c281.us-east-1-2.ec2.redns.redis-cloud.com'
+CELERY_RESULT_BACKEND = 'redis://:YnrV9rNvfPk0PdfDyFzwRIIlJun4r45V@redis-16174.c281.us-east-1-2.ec2.redns.redis-cloud.com:16174/0'
 CELERY_TIMEZONE = 'UTC'
 CELERY_ENABLE_UTC = True
 
