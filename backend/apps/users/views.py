@@ -3,12 +3,15 @@ from rest_framework import status # type: ignore
 from rest_framework.views import APIView # type: ignore
 from django.core.mail import send_mail # type: ignore
 from django.contrib.auth import authenticate # type: ignore
-from .serializers import UserRegistrationSerializer, UserLoginSerializer, UserSerializer
+from .serializers import UserRegistrationSerializer, UserLoginSerializer, UserSerializer, UserUpdateSerializer
 from rest_framework.authtoken.models import Token # type: ignore
 from rest_framework.permissions import AllowAny # type: ignore
 from rest_framework_simplejwt.tokens import RefreshToken # type: ignore
 from django.urls import reverse # type: ignore
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated # type: ignore
 from .models import User
+from .tasks import send_verification_email
 import json
 import jwt
 
@@ -26,27 +29,14 @@ class UserRegisterView(APIView):
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-            token = RefreshToken.for_user(user).access_token
-            verification_link = request.build_absolute_uri(
-                reverse('email-verify') + f'?token={str(token)}'
-            )
-            # print(verification_link)
-            email = EmailMessage(
-                'Verify Your Email',
-                f'Click the link to verify your account: {verification_link}',
-                settings.EMAIL_HOST_USER,
-                [user.email]
-            )
-            email.fail_silently = False
-            try:
-                email.send()
-            except socket.gaierror as e:
-                print(e)
-            except Exception as e:
-                pass
-            return Response({'email':user.email, 'message': 'User created. Verify your email.', 'url':verification_link}, status=status.HTTP_201_CREATED) #,
+            # token = RefreshToken.for_user(user).access_token
+            # verification_link = request.build_absolute_uri(
+            #             reverse('email-verify') + f'?token={str(token)}'
+            #         )
+            send_verification_email.delay(user.id)
+            return Response({'email':user.email, 'message': 'An verification mail has been sent. Verify your email.'}, status=status.HTTP_201_CREATED) #,
             # return Response({"message": "User registered successfully", "user": serializer.data}, status=status.HTTP_201_CREATED)
-        print(serializer.errors)
+        # print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserLoginView(APIView):
@@ -99,5 +89,14 @@ class VerifyEmail(APIView):
             return Response({'status':'fail', 'message': 'something went wrong'}, status=status.HTTP_303_SEE_OTHER)
 
         return Response({'status': 'success', 'message': 'Email verified successfully!'}, status=status.HTTP_200_OK)
+
+
+class UserUpdateView(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserUpdateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user  # Assuming the user updates their profile
 
  

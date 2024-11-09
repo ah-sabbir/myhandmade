@@ -2,6 +2,25 @@ import uuid
 from django.db import models # type: ignore
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin # type: ignore
 from django.core.validators import RegexValidator # type: ignore
+from datetime import date
+
+
+def save_dir(instance, filename):
+    return f'./static/images/user/{instance.id}-{filename}'
+
+
+class Address(models.Model):
+    address = models.CharField(max_length=255)
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    state_code = models.CharField(max_length=5)
+    postal_code = models.CharField(max_length=20)
+    coordinates = models.JSONField()  # to store latitude and longitude as a dictionary
+    country = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.address}, {self.city}, {self.state}, {self.country}"
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, first_name, last_name, email, password = None, phone_number = None, **extra_fields):
@@ -22,7 +41,6 @@ class CustomUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, first_name, last_name, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_pro', True)
 
@@ -33,9 +51,6 @@ class CustomUserManager(BaseUserManager):
             password=password,
             **extra_fields
             )
-        # user.role = 'admin'  # Set the role to admin
-        # user.is_staff = True
-        # user.is_superuser = True
         user.save(using=self._db)
         return user
 
@@ -47,8 +62,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('seller', 'seller'),
     )
 
+    USER_GENDER = (
+        ('Female', 'female'),
+        ('Male', 'male'),
+        ('Other', 'other')
+    )
+
     first_name = models.CharField(max_length=150, default='Unknown')
     last_name = models.CharField(max_length=150, default='Unknown')
+    age = models.IntegerField(null=True, blank=True, editable=False)
+    gender = models.CharField(max_length=50, choices=USER_GENDER, default='customer')
     email = models.EmailField(unique=True)
     email_verified = models.BooleanField(default=False)
     phone_number = models.CharField(
@@ -58,13 +81,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         null=True,
         blank=True
     )
+    birthDate = models.DateField(null=True, blank=True)
+    image = models.ImageField(upload_to=save_dir, blank=True, null=True)
     phone_verified = models.BooleanField(default=False)
-    # password_hash = models.CharField(max_length=128)
     user_type = models.CharField(max_length=50, choices=USER_ROLES, default='customer')  # Default role
     created_at = models.DateTimeField(auto_now_add=True)  # Timestamp for creation
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True, blank=True)
 
     is_staff = models.BooleanField(default=False)  # if staff
-    is_superuser = models.BooleanField(default=False)  # if admin
     is_pro = models.BooleanField(default=False)
 
     objects = CustomUserManager()
@@ -77,3 +101,18 @@ class User(AbstractBaseUser, PermissionsMixin):
         # user_data = {k: v for k, v in self.__dict__.items() if k != 'password' and not k.startswith('_')}
         # return str(user_data)
         return self.email # type: ignore
+
+    def calculate_age(self):
+        today = date.today()
+        age = today.year - self.birthDate.year
+        if today.month < self.birthDate.month or (today.month == self.birthDate.month and today.day < self.birthDate.day):
+            age -= 1
+        return age
+
+    def save(self, *args, **kwargs):
+        # Update the age field based on birthDate before saving
+        if self.birthDate:
+            self.age = self.calculate_age()
+        super().save(*args, **kwargs)
+
+

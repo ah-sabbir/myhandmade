@@ -105,6 +105,14 @@ CHANNEL_LAYERS = {
 
 
 
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'  # Use your broker
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_BACKEND = 'rpc://localhost:5672/0'
+CELERY_TIMEZONE = 'UTC'
+CELERY_ENABLE_UTC = True
+
+
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases

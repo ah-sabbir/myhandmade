@@ -47,9 +47,20 @@ class UserLoginSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=False)
+    is_staff = serializers.BooleanField(write_only=True, required=False)
+    is_pro = serializers.BooleanField(write_only=True, required=False)
     class Meta:
         model = User
         fields = '__all__'  # Use all fields in the model
         extra_kwargs = {
             'password': {'write_only': True}  # Exclude 'password' from being exposed in the output
         }
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=False)
+    class Meta:
+        model = User
+        fields = '__all__'
+
