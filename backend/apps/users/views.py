@@ -31,7 +31,6 @@ class UserRegisterView(APIView):
                         reverse('email-verify') + f'?token={str(token)}'
                     )
             result = send_verification_email.delay(user.email, verification_link)
-            print(result.get(timeout=10))
             return Response({'message': 'An verification mail has been sent. Verify your email.'}, status=status.HTTP_201_CREATED) #,
             # return Response({"message": "User registered successfully", "user": serializer.data}, status=status.HTTP_201_CREATED)
         # print(serializer.errors)

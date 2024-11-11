@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import cloudinary_storage
 import os
+import sys
 
 from dotenv import load_dotenv # type: ignore
 
@@ -119,27 +120,30 @@ CELERY_ENABLE_UTC = True
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',        # Supabase database name
-        'USER': 'postgres.cwclpnpkglzoscohzvnx',        # Supabase user
-        'PASSWORD': 'Myhandmade#pass', # Supabase password
-        'HOST': 'aws-0-ap-southeast-1.pooler.supabase.com',         # Supabase host, e.g., db.supabase.co
-        'PORT': '6543',   
-        'TEST': {
-            'NAME': 'unique_test_database_name',  # Unique name to avoid conflicts
-        },                    # Default PostgreSQL port
+if 'test' in sys.argv:
+    CELERY_TASK_ALWAYS_EAGER = True
+    CELERY_TASK_EAGER_PROPAGATES = True  # To see errors in testing directly
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'postgres',        # Supabase database name
+            'USER': 'postgres.cwclpnpkglzoscohzvnx',        # Supabase user
+            'PASSWORD': 'Myhandmade#pass', # Supabase password
+            'HOST': 'aws-0-ap-southeast-1.pooler.supabase.com',         # Supabase host, e.g., db.supabase.co
+            'PORT': '6543',   
+            'TEST': {
+                'NAME': 'unique_test_database_name',  # Unique name to avoid conflicts
+            },                    # Default PostgreSQL port
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -176,7 +180,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
         # You can add more authentication classes if needed, e.g. for JWT
-        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
