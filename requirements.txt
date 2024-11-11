@@ -29,3 +29,4 @@ psycopg2
 resend
 supabase
 celery
+redis
