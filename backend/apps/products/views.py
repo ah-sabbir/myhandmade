@@ -31,63 +31,74 @@ class ProductDetailView(APIView):
         productserializer = ProductSerializer(product, many=True)
         return Response({'products':productserializer.data}, status=status.HTTP_200_OK)
 
+
+# Product ViewSet with Complete CRUD Functionality
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticated]
 
-    def create(self, request, *args, **kwargs):
-        # Get the user's store; assuming each user has one store
+def create(self, request, *args, **kwargs):
+        # Get the user's store
         try:
             store = Store.objects.get(owner=request.user)
-        except ObjectDoesNotExist:
+        except Store.DoesNotExist:
             return Response({"error": "No store found for this user."}, status=status.HTTP_400_BAD_REQUEST)
         
-        # Add owner and store to the request data before validation
-        data = request.data.copy()  # Create a mutable copy of request data
-        data.update({"owner": request.user.id, "store": store.id})  # Inject `owner` and `store`
+        # Add owner and store to the request data
+        data = request.data.copy()
+        data.update({"owner": request.user.id, "store": store.id})
 
-        # Pass the modified data to the serializer
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()  # Save without explicitly specifying `owner` and `store` here as they're in `data`
-        
-        self.perform_create(serializer)
+        serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+    def retrieve(self, request, pk=None):
+        try:
+            product = Product.objects.get(pk=pk, store__owner=request.user)
+            serializer = self.get_serializer(product)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Product.DoesNotExist:
+            return Response({"error": "Product not found."}, status=status.HTTP_404_NOT_FOUND)
 
-    # def perform_create(self, serializer):
-    #     serializer.save(owner=self.request.user, store=self.request.user.store)
+    def update(self, request, pk=None):
+        try:
+            product = Product.objects.get(pk=pk, store__owner=request.user)
+        except Product.DoesNotExist:
+            return Response({"error": "Product not found."}, status=status.HTTP_404_NOT_FOUND)
 
-    # def create(self, request, *args, **kwargs):
-    #     serializer = self.get_serializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     serializer.save(owner=self.request.user)
-    #     self.perform_create(serializer)
-    #     return Response(serializer.data, status=status.HTTP_201_CREATED)
+        data = request.data.copy()
+        data.update({"owner": request.user.id, "store": product.store.id})
 
-    #     return Response(status = status.HTTP_200_OK)
-    
+        serializer = self.get_serializer(product, data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def partial_update(self, request, pk=None):
+        try:
+            product = Product.objects.get(pk=pk, store__owner=request.user)
+        except Product.DoesNotExist:
+            return Response({"error": "Product not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        data = request.data.copy()
+        data.update({"owner": request.user.id, "store": product.store.id})
+
+        serializer = self.get_serializer(product, data=data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def destroy(self, request, pk=None):
+        try:
+            product = Product.objects.get(pk=pk, store__owner=request.user)
+            product.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Product.DoesNotExist:
+            return Response({"error": "Product not found."}, status=status.HTTP_404_NOT_FOUND)
+
     def list(self, request, *args, **kwargs):
-        # Implement list functionality if needed
-        return super().list(request, *args, **kwargs)
-
-
-
-
-# class ProductDetailView(generics.ListCreateAPIView):
-#     queryset = Product.objects.all()
-#     serializer_class = ProductSerializer
-#     permission_classes = [IsAuthenticated]
-
-#     def get_queryset(self):
-#         user = self.request.user
-#         return user.accounts.all()
-        
-#     def get(self, request):
-#         user = request.user
-#         # user_id = User.objects.get(email=user)
-#         product = Store.objects.filter(user=user.id)
-#         productserializer = ProductSerializer(product, many=True)
-#         return Response({'products':productserializer.data}, status=status.HTTP_200_OK)
-
-# Create your views here.
+        queryset = Product.objects.filter(store__owner=request.user)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
